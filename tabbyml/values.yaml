@@ -1,0 +1,77 @@
+# Default values for tabbyml.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+
+image:
+  repository: tabbyml/tabby
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+
+nameOverride: "tabby"
+fullnameOverride: "tabby"
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: "tabby-sa"
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext:
+   capabilities:
+     drop:
+     - ALL
+   readOnlyRootFilesystem: true
+   runAsNonRoot: true
+   runAsUser: 10000
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+resources:
+   limits:
+     cpu: 2000m
+     memory: 4096Mi
+   requests:
+     cpu: 1000m
+     memory: 2048Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+storage:
+  claimName: tabby-volume-claim
+  size: 10Gi
+  className: ""
+
+env:
+  LLAMA_CPP_PARALLELISM: 1
+  TABBY_DISABLE_USAGE_COLLECTION: 1
+  DEVICE: cpu
+  MODEL: TabbyML/StarCoder-1B
